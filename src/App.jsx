@@ -2,6 +2,7 @@ import './App.css';
 import React from 'react';
 import './components/CameraModal/CameraModal'
 import CameraModal from './components/CameraModal/CameraModal';
+import CameraComponent from './components/CameraComponent/CameraComponent';
 
 
 function App() {
@@ -10,6 +11,7 @@ function App() {
     <div className="App">
       <div>
         <CameraModal/>
+        <CameraComponent/>
       </div>
     </div>
   );
