@@ -3,9 +3,16 @@ import './styles.css'
 
 export default function MyCamera() {
     const videoRef = useRef(null);
-    // console.log(videoRef)
+    const canvasRef = useRef(null);
 
     const [isModalOpen, setIsModalOpen] = useState(false)
+
+    
+    const [capturedImage1, setCapturedImage1] = useState(null); // to take a photo with the correct answers
+
+    
+    const [capturedImage2, setCapturedImage2] = useState(null);  // to take a photo with student test results
+
 
     const OpenModal = () => {
         setIsModalOpen(true);
@@ -73,6 +80,22 @@ export default function MyCamera() {
     }, []);
 
 
+    const takeAPhoto = () => {
+        const videoElement = videoRef.current;
+        const canvasElement = canvasRef.current;
+
+        if (videoElement && canvasElement) {
+            const canvasContext = canvasElement.getContext('2d');
+            canvasContext.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height);
+
+            const imageDataURL = canvasElement.toDataURL(); // Получение изображения в формате base64
+            console.log(imageDataURL)
+        }
+    };
+
+    const resetAPhoto = () => {
+        setCapturedImage1(null)
+    }
 
     const CloseModal = () => {
         setIsModalOpen(false)
@@ -86,13 +109,16 @@ export default function MyCamera() {
             {isModalOpen && (
                 <div className='modal-window' style={{ border: '5px solid orange' }}>
                     <div className='modal-btns'>
-                        <button onClick={CloseModal}>Close Modal</button>
+                        <button onClick={takeAPhoto}>Take a photo</button>
                         <button onClick={switchToMainCamera}>Swtich Camera</button>
+                        <button onClick={resetAPhoto}>Reset</button>
+                        <button onClick={CloseModal}>Close Modal</button>
                     </div>
                     <div className='video-div'>
                         <video ref={videoRef} autoPlay></video>
+                        <canvas ref={canvasRef}></canvas>
                     </div>
-                    
+
                 </div>
             )}
         </div>
