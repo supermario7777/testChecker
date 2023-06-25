@@ -10,6 +10,7 @@ export default function MyCamera() {
     const OpenModal = () => {
         setIsModalOpen(true);
         openCamera();
+        updateVideoSize();
     }
 
 
