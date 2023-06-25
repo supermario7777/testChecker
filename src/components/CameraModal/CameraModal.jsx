@@ -51,28 +51,6 @@ const CameraModal = () => {
       
         return new Blob([arrayBuffer], { type: mimeString });
     }
-
-
-
-
-
-    const switchToMainCamera = async () => {
-        const stream = webcamRef.current.srcObject;
-        if (!stream) return;
-    
-        const tracks = stream.getVideoTracks();
-        if (tracks.length > 0) {
-          const mainCameraStream = await navigator.mediaDevices.getUserMedia({
-            video: { facingMode: 'environment' },
-          });
-    
-          // Replace the current camera stream with the main camera stream
-          webcamRef.current.srcObject = mainCameraStream;
-    
-          // Stop and release the resources of the previous camera stream
-          tracks[0].stop();
-        }
-      };
       
 
     return (
@@ -88,7 +66,6 @@ const CameraModal = () => {
                     <button onClick={resetPicture}>Reset</button>
                     <button onClick={handleCapture}>Save</button>
                     <button onClick={closeModal}>Close</button>
-                    <button onClick={switchToMainCamera}>Switch to Main Camera</button>
                 </div>
                 <div className='webcam'>
                     <Webcam ref={webcamRef}/>
