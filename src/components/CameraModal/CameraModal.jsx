@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState} from 'react';
 import Modal from 'react-modal';
 import Webcam from 'react-webcam';
 import './styles.css';

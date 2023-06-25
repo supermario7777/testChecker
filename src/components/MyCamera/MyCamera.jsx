@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import './styles.css'
 
 export default function MyCamera() {
@@ -12,10 +12,6 @@ export default function MyCamera() {
         openCamera();
     }
 
-    const CloseModal = () => {
-        setIsModalOpen(false)
-        closeCamera()
-    }
 
     const openCamera = async () => {
         try {
@@ -47,24 +43,40 @@ export default function MyCamera() {
     const closeCamera = () => {
         const videoElement = videoRef.current;
         if (videoElement && videoElement.srcObject) {
-          const stream = videoElement.srcObject;
-          const tracks = stream.getTracks();
-      
-          tracks.forEach((track) => {
-            track.stop(); // Остановка видеопотока
-          });
-      
-          videoElement.srcObject = null; // Очистка видеопотока
+            const stream = videoElement.srcObject;
+            const tracks = stream.getTracks();
+
+            tracks.forEach((track) => {
+                track.stop(); // to stop the videostream
+            });
+
+            videoElement.srcObject = null; // clearing the videostream
         }
-      };
-      
+    };
+
+    const updateVideoSize = () => {
+        const videoElement = videoRef.current;
+        if (videoElement) {
+            videoElement.width = window.innerWidth; // Установите ширину видеопотока равной ширине экрана
+            videoElement.height = window.innerHeight; // Установите высоту видеопотока равной высоте экрана
+        }
+    };
+
+    useEffect(() => {
+        updateVideoSize();
+        window.addEventListener('resize', updateVideoSize); // Обновление размеров видеопотока при изменении размера окна
+
+        return () => {
+            window.removeEventListener('resize', updateVideoSize); // Удаление обработчика события при размонтировании компонента
+        };
+    }, []);
 
 
 
-
-
-
-
+    const CloseModal = () => {
+        setIsModalOpen(false)
+        closeCamera()
+    }
 
 
     return (
