@@ -5,3 +5,8 @@
     justify-content: center;
     gap: 25px;
 }
+
+.video-div{
+    width: auto;
+    height: auto ;
+}

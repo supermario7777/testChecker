@@ -89,7 +89,10 @@ export default function MyCamera() {
                         <button onClick={CloseModal}>Close Modal</button>
                         <button onClick={switchToMainCamera}>Swtich Camera</button>
                     </div>
-                    <video ref={videoRef} autoPlay></video>
+                    <div className='video-div'>
+                        <video ref={videoRef} autoPlay></video>
+                    </div>
+                    
                 </div>
             )}
         </div>
