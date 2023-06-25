@@ -7,10 +7,8 @@ export default function MyCamera() {
 
     const [isModalOpen, setIsModalOpen] = useState(false)
 
-    
-    const [capturedImage1, setCapturedImage1] = useState(null); // to take a photo with the correct answers
 
-    
+    const [capturedImage1, setCapturedImage1] = useState(null); // to take a photo with the correct answers
     const [capturedImage2, setCapturedImage2] = useState(null);  // to take a photo with student test results
 
 
@@ -25,6 +23,7 @@ export default function MyCamera() {
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ video: true });
             videoRef.current.srcObject = stream;
+            videoRef.current.play();
         } catch (error) {
             console.error('Error accessing camera:', error);
         }
@@ -80,21 +79,36 @@ export default function MyCamera() {
     }, []);
 
 
-    const takeAPhoto = () => {
+    const capturePhoto = () => {
         const videoElement = videoRef.current;
         const canvasElement = canvasRef.current;
 
-        if (videoElement && canvasElement) {
-            const canvasContext = canvasElement.getContext('2d');
-            canvasContext.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height);
+        canvasElement.width = videoElement.videoWidth;
+        canvasElement.height = videoElement.videoHeight;
 
-            const imageDataURL = canvasElement.toDataURL(); // Получение изображения в формате base64
-            console.log(imageDataURL)
-        }
+        const context = canvasElement.getContext('2d');
+        context.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height);
+
+        const imageSrc = canvasElement.toDataURL();
+        setCapturedImage1(imageSrc);
     };
 
-    const resetAPhoto = () => {
+    // const takeAPhoto = () => {
+    //     const videoElement = videoRef.current;
+    //     const canvasElement = canvasRef.current;
+
+    //     if (videoElement && canvasElement) {
+    //         const canvasContext = canvasElement.getContext('2d');
+    //         canvasContext.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height);
+
+    //         const imageDataURL = canvasElement.toDataURL(); // Получение изображения в формате base64
+    //         setCapturedImage1(imageDataURL)
+    //     }
+    // };
+
+    const resetPhoto = () => {
         setCapturedImage1(null)
+        openCamera()
     }
 
     const CloseModal = () => {
@@ -109,14 +123,20 @@ export default function MyCamera() {
             {isModalOpen && (
                 <div className='modal-window' style={{ border: '5px solid orange' }}>
                     <div className='modal-btns'>
-                        <button onClick={takeAPhoto}>Take a photo</button>
+                        <button onClick={capturePhoto}>Take a photo</button>
                         <button onClick={switchToMainCamera}>Swtich Camera</button>
-                        <button onClick={resetAPhoto}>Reset</button>
+                        <button onClick={resetPhoto}>Reset</button>
                         <button onClick={CloseModal}>Close Modal</button>
                     </div>
                     <div className='video-div'>
-                        <video ref={videoRef} autoPlay></video>
-                        <canvas ref={canvasRef}></canvas>
+                        {capturedImage1 ? (
+                            <img src={capturedImage1} alt="Captured" />
+                        ) : (
+                            <video ref={videoRef} autoPlay></video>
+                        )}
+                        <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
+                        {/* <video ref={videoRef} autoPlay></video>
+                        <canvas ref={canvasRef}></canvas> */}
                     </div>
 
                 </div>
