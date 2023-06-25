@@ -58,8 +58,8 @@ export default function MyCamera() {
     const updateVideoSize = () => {
         const videoElement = videoRef.current;
         if (videoElement) {
-            videoElement.width = window.innerWidth; // Установите ширину видеопотока равной ширине экрана
-            videoElement.height = window.innerHeight; // Установите высоту видеопотока равной высоте экрана
+            videoElement.width = "100%"; // Установите ширину видеопотока равной ширине экрана
+            videoElement.height = 'auto'; // Установите высоту видеопотока равной высоте экрана
         }
     };
 
