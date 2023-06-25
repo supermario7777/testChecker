@@ -83,7 +83,7 @@ export default function MyCamera() {
         <div>
             {!isModalOpen && <button onClick={OpenModal}>Open Modal Window</button>}
             {isModalOpen && (
-                <div className='modal-window' style={{ border: '5px solid red' }}>
+                <div className='modal-window' style={{ border: '5px solid green' }}>
                     <div className='modal-btns'>
                         <button onClick={CloseModal}>Close Modal</button>
                         <button onClick={switchToMainCamera}>Swtich Camera</button>
