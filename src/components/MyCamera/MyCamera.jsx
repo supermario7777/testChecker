@@ -9,16 +9,16 @@ export default function MyCamera() {
 
 
     const [capturedImage1, setCapturedImage1] = useState(null); // to take a photo with the correct answers
-    const [capturedImage2, setCapturedImage2] = useState(null);  // to take a photo with student test results
+    // const [capturedImage2, setCapturedImage2] = useState(null);  // to take a photo with student test results
 
-
+    // open the modal window by clicking on the "open" button
     const OpenModal = () => {
         setIsModalOpen(true);
         openCamera();
         updateVideoSize();
     }
 
-
+    // open the camera a start a videostream
     const openCamera = async () => {
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ video: true });
@@ -29,6 +29,7 @@ export default function MyCamera() {
         }
     };
 
+    // change camera view from frontal camera to main
     const switchToMainCamera = async () => {
         const stream = videoRef.current.srcObject;
         if (!stream) return;
@@ -47,7 +48,9 @@ export default function MyCamera() {
         }
     };
 
-    const closeCamera = () => {
+
+    // close the camera by clicking on "close" button and stop the video stream
+    const closeCamera = async () => {
         const videoElement = videoRef.current;
         if (videoElement && videoElement.srcObject) {
             const stream = videoElement.srcObject;
@@ -111,6 +114,7 @@ export default function MyCamera() {
         openCamera()
     }
 
+    // close the modal window and run closeCamera() func
     const CloseModal = () => {
         setIsModalOpen(false)
         closeCamera()
@@ -123,10 +127,10 @@ export default function MyCamera() {
             {isModalOpen && (
                 <div className='modal-window' style={{ border: '5px solid orange' }}>
                     <div className='modal-btns'>
-                        <button onClick={capturePhoto}>Take a photo</button>
-                        <button onClick={switchToMainCamera}>Swtich Camera</button>
-                        <button onClick={resetPhoto}>Reset</button>
-                        <button onClick={CloseModal}>Close Modal</button>
+                        <button onClick={() => capturePhoto()}>Take a photo</button>
+                        <button onClick={() => switchToMainCamera()}>Swtich Camera</button>
+                        <button onClick={() => resetPhoto()}>Reset</button>
+                        <button onClick={() => CloseModal()}>Close Modal</button>
                     </div>
                     <div className='video-div'>
                         {capturedImage1 ? (
@@ -138,7 +142,6 @@ export default function MyCamera() {
                         {/* <video ref={videoRef} autoPlay></video>
                         <canvas ref={canvasRef}></canvas> */}
                     </div>
-
                 </div>
             )}
         </div>
