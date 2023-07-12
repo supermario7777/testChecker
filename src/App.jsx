@@ -1,8 +1,7 @@
 import './App.css';
 import React from 'react';
-// import './components/CameraModal/CameraModal'
-// import CameraModal from './components/CameraModal/CameraModal';
-import MyCamera from './components/MyCamera/MyCamera';
+import TakeAPhotoWithCorrectAnswers from './components/TakeAPhotoWithCorrectAnswers/TakeAPhotoWithCorrectAnswers';
+import TakeAPhotoWithTheAnswers from './components/TakeAPhotoWithTheResults/TakeAPhotoWithTheResults';
 
 
 function App() {
@@ -11,7 +10,10 @@ function App() {
     <div className="App">
       <div>
         {/* <CameraModal/> */}
-        <MyCamera/>
+        <TakeAPhotoWithCorrectAnswers />
+      </div>
+      <div>
+        <TakeAPhotoWithTheAnswers />
       </div>
     </div>
   );

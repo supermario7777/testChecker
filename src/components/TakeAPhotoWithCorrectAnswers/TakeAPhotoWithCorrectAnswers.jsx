@@ -1,13 +1,10 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState } from 'react';
 import './styles.css'
 
-export default function MyCamera() {
+export default function TakeAPhotoWithCorrectAnswers() {
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
-
     const [isModalOpen, setIsModalOpen] = useState(false)
-
-
     const [capturedImage1, setCapturedImage1] = useState(null); // to take a photo with the correct answers
     // const [capturedImage2, setCapturedImage2] = useState(null);  // to take a photo with student test results
 
@@ -15,39 +12,37 @@ export default function MyCamera() {
     const OpenModal = () => {
         setIsModalOpen(true);
         openCamera();
-        updateVideoSize();
+    }
+
+    
+    const setMaxWidthAndHeight = () => {
+        if (videoRef.current) {
+            videoRef.current.style.maxWidth = '100%';
+            videoRef.current.style.maxHeight = '100%';
+        }
+    };
+
+    // close the modal window and run closeCamera() func
+    const CloseModal = () => {
+        setCapturedImage1(null)
+        setIsModalOpen(false)
+        closeCamera()
+        const videoElement = videoRef.current;
+        if (videoElement && videoElement.srcObject) {
+            videoRef.current.pause();
+        }
     }
 
     // open the camera a start a videostream
     const openCamera = async () => {
         try {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true});
             videoRef.current.srcObject = stream;
             videoRef.current.play();
         } catch (error) {
             console.error('Error accessing camera:', error);
         }
     };
-
-    // change camera view from frontal camera to main
-    const switchToMainCamera = async () => {
-        const stream = videoRef.current.srcObject;
-        if (!stream) return;
-
-        const tracks = stream.getVideoTracks();
-        if (tracks.length > 0) {
-            const mainCameraStream = await navigator.mediaDevices.getUserMedia({
-                video: { facingMode: 'environment' },
-            });
-
-            // Replace the current camera stream with the main camera stream
-            videoRef.current.srcObject = mainCameraStream;
-
-            // Stop and release the resources of the previous camera stream
-            tracks[0].stop();
-        }
-    };
-
 
     // close the camera by clicking on "close" button and stop the video stream
     const closeCamera = async () => {
@@ -64,23 +59,22 @@ export default function MyCamera() {
         }
     };
 
-    const updateVideoSize = () => {
-        const videoElement = videoRef.current;
-        if (videoElement) {
-            videoElement.width = "100%"; // Установите ширину видеопотока равной ширине экрана
-            videoElement.height = 'auto'; // Установите высоту видеопотока равной высоте экрана
+    // change camera view from frontal camera to main
+    const switchToMainCamera = async () => {
+        const stream = videoRef.current.srcObject;
+        if (!stream) return;
+
+        const tracks = stream.getVideoTracks();
+        if (tracks.length > 0) {
+            const mainCameraStream = await navigator.mediaDevices.getUserMedia({
+                video: { facingMode: 'environment' },
+            });
+            // Replace the current camera stream with the main camera stream
+            videoRef.current.srcObject = mainCameraStream;
+            // Stop and release the resources of the previous camera stream
+            tracks[0].stop();
         }
     };
-
-    useEffect(() => {
-        updateVideoSize();
-        window.addEventListener('resize', updateVideoSize); // Обновление размеров видеопотока при изменении размера окна
-
-        return () => {
-            window.removeEventListener('resize', updateVideoSize); // Удаление обработчика события при размонтировании компонента
-        };
-    }, []);
-
 
     const capturePhoto = () => {
         const videoElement = videoRef.current;
@@ -96,6 +90,29 @@ export default function MyCamera() {
         setCapturedImage1(imageSrc);
     };
 
+    const resetPhoto = () => {
+        setCapturedImage1(null)
+        openCamera()
+    }
+
+
+    // const updateVideoSize = () => {
+    //     const videoElement = videoRef.current;
+    //     if (videoElement) {
+    //         videoElement.width = "100%"; // Установите ширину видеопотока равной ширине экрана
+    //         videoElement.height = 'auto'; // Установите высоту видеопотока равной высоте экрана
+    //     }
+    // };
+
+    // useEffect(() => {
+    //     updateVideoSize();
+    //     window.addEventListener('resize', updateVideoSize); // Обновление размеров видеопотока при изменении размера окна
+
+    //     return () => {
+    //         window.removeEventListener('resize', updateVideoSize); // Удаление обработчика события при размонтировании компонента
+    //     };
+    // }, []);
+
     // const takeAPhoto = () => {
     //     const videoElement = videoRef.current;
     //     const canvasElement = canvasRef.current;
@@ -108,18 +125,6 @@ export default function MyCamera() {
     //         setCapturedImage1(imageDataURL)
     //     }
     // };
-
-    const resetPhoto = () => {
-        setCapturedImage1(null)
-        openCamera()
-    }
-
-    // close the modal window and run closeCamera() func
-    const CloseModal = () => {
-        setIsModalOpen(false)
-        closeCamera()
-    }
-
 
     return (
         <div>
@@ -136,7 +141,7 @@ export default function MyCamera() {
                         {capturedImage1 ? (
                             <img src={capturedImage1} alt="Captured" />
                         ) : (
-                            <video ref={videoRef} autoPlay></video>
+                            <video ref={videoRef} onLoadedMetadata={setMaxWidthAndHeight} autoPlay></video>
                         )}
                         <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
                         {/* <video ref={videoRef} autoPlay></video>
