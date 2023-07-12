@@ -139,7 +139,7 @@ export default function TakeAPhotoWithCorrectAnswers() {
                     </div>
                     <div className='video-div'>
                         {capturedImage1 ? (
-                            <img src={capturedImage1} alt="Captured" />
+                            <img src={capturedImage1} onLoadedMetadata={setMaxWidthAndHeight} alt="Captured" />
                         ) : (
                             <video ref={videoRef} onLoadedMetadata={setMaxWidthAndHeight} autoPlay></video>
                         )}
