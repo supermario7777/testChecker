@@ -1,12 +1,13 @@
 import React, { useRef, useState } from 'react';
 import './styles.css'
+import Tesseract from 'tesseract.js';
 
-export default function TakeAPhotoWithTheAnswers() {
+export default function TakeAPhotoWithTheTextResults() {
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
     const [isModalOpen, setIsModalOpen] = useState(false)
-    const [capturedImage1, setCapturedImage1] = useState(null); // to take a photo with the correct answers
-    // const [capturedImage2, setCapturedImage2] = useState(null);  // to take a photo with student test results
+    const [capturedImage, setCapturedImage] = useState(null); // to take a photo with the student answers
+    const [textResult, setTextResult] = useState("");
 
     // open the modal window by clicking on the "open" button
     const OpenModal = () => {
@@ -14,13 +15,21 @@ export default function TakeAPhotoWithTheAnswers() {
         openCamera();
     }
 
+    // to set required width and height depending on device camera parameters
+    const setMaxWidthAndHeight = () => {
+        if (videoRef.current) {
+            videoRef.current.style.maxWidth = '100%';
+            videoRef.current.style.maxHeight = '100%';
+        }
+    };
+
     // close the modal window and run closeCamera() func
     const CloseModal = () => {
-        setCapturedImage1(null)
-        setIsModalOpen(false)        
+        setCapturedImage(null)
+        setIsModalOpen(false)
         closeCamera()
         const videoElement = videoRef.current;
-        if (videoElement && videoElement.srcObject){
+        if (videoElement && videoElement.srcObject) {
             videoRef.current.pause();
         }
     }
@@ -28,7 +37,7 @@ export default function TakeAPhotoWithTheAnswers() {
     // open the camera a start a videostream
     const openCamera = async () => {
         try {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: {width: 250, height: 250} });
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
             videoRef.current.srcObject = stream;
             videoRef.current.play();
         } catch (error) {
@@ -68,6 +77,7 @@ export default function TakeAPhotoWithTheAnswers() {
         }
     };
 
+    // to capture photo and run processImage func with the imageSrc method
     const capturePhoto = () => {
         const videoElement = videoRef.current;
         const canvasElement = canvasRef.current;
@@ -77,67 +87,48 @@ export default function TakeAPhotoWithTheAnswers() {
 
         const context = canvasElement.getContext('2d');
         context.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height);
+        const imageSrc = canvasElement.toDataURL('image/png');
+        console.log(typeof (imageSrc))
 
-        const imageSrc = canvasElement.toDataURL();
-        setCapturedImage1(imageSrc);
+        processImage(imageSrc)
+        setCapturedImage(imageSrc)
     };
 
+    // to convert the image to text using tesseract js libriary and save the text in textResult variable
+    const processImage = async (imageData) => {
+        try {
+            const { data: { text } } = await Tesseract.recognize(imageData, 'eng');
+            setTextResult(text)
+            console.log(textResult)
+        } catch (error) {
+            console.error('Error in OCR:', error);
+        }
+    };
+
+    // to reset the captured image
     const resetPhoto = () => {
-        setCapturedImage1(null)
+        setCapturedImage(null)
         openCamera()
     }
 
-
-    // const updateVideoSize = () => {
-    //     const videoElement = videoRef.current;
-    //     if (videoElement) {
-    //         videoElement.width = "100%"; // Установите ширину видеопотока равной ширине экрана
-    //         videoElement.height = 'auto'; // Установите высоту видеопотока равной высоте экрана
-    //     }
-    // };
-
-    // useEffect(() => {
-    //     updateVideoSize();
-    //     window.addEventListener('resize', updateVideoSize); // Обновление размеров видеопотока при изменении размера окна
-
-    //     return () => {
-    //         window.removeEventListener('resize', updateVideoSize); // Удаление обработчика события при размонтировании компонента
-    //     };
-    // }, []);
-
-    // const takeAPhoto = () => {
-    //     const videoElement = videoRef.current;
-    //     const canvasElement = canvasRef.current;
-
-    //     if (videoElement && canvasElement) {
-    //         const canvasContext = canvasElement.getContext('2d');
-    //         canvasContext.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height);
-
-    //         const imageDataURL = canvasElement.toDataURL(); // Получение изображения в формате base64
-    //         setCapturedImage1(imageDataURL)
-    //     }
-    // };
-
     return (
         <div>
-            {!isModalOpen && <button onClick={OpenModal}>Open Modal Window</button>}
+            {!isModalOpen && <button onClick={OpenModal}>Take a photo with the student results</button>}
             {isModalOpen && (
                 <div className='modal-window' style={{ border: '5px solid orange' }}>
                     <div className='modal-btns'>
-                        <button onClick={() => capturePhoto()}>Take a photo</button>
-                        <button onClick={() => switchToMainCamera()}>Swtich Camera</button>
+                        <button onClick={() => capturePhoto()}>Capture</button>
+                        <button onClick={() => switchToMainCamera()}>Switch Camera</button>
                         <button onClick={() => resetPhoto()}>Reset</button>
-                        <button onClick={() => CloseModal()}>Close Modal</button>
+                        <button onClick={() => CloseModal()}>Close</button>
                     </div>
                     <div className='video-div'>
-                        {capturedImage1 ? (
-                            <img src={capturedImage1} alt="Captured" />
+                        {capturedImage ? (
+                            <img src={capturedImage} alt="Captured" />
                         ) : (
-                            <video ref={videoRef} autoPlay></video>
+                            <video ref={videoRef} onLoadedMetadata={setMaxWidthAndHeight} autoPlay></video>
                         )}
                         <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
-                        {/* <video ref={videoRef} autoPlay></video>
-                        <canvas ref={canvasRef}></canvas> */}
                     </div>
                 </div>
             )}
