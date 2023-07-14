@@ -131,6 +131,7 @@ export default function TakeAPhotoWithCorrectAnswers() {
                         )}
                         <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
                     </div>
+                    <p>{textResult}</p>
                 </div>
             )}
         </div>

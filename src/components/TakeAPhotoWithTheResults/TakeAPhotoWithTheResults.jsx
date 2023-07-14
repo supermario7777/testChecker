@@ -130,6 +130,7 @@ export default function TakeAPhotoWithTheTextResults() {
                         )}
                         <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
                     </div>
+                    <p>{textResult}</p>
                 </div>
             )}
         </div>
