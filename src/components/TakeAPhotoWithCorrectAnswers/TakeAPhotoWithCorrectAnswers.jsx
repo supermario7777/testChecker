@@ -8,7 +8,7 @@ export default function TakeAPhotoWithCorrectAnswers({ textResult, setTextResult
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [capturedImage, setCapturedImage] = useState(null); // to take a photo with the correct answers
     const [selectedImage, setSelectedImage] = useState(null);
-    const [facingMode, setFacingMode] = useState('environment');
+    const [facingMode, setFacingMode] = useState('user');
 
     const handleImageUpload = (e) => {
         const file = e.target.files[0];
