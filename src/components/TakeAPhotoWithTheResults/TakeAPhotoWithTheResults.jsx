@@ -2,12 +2,34 @@ import React, { useRef, useState } from 'react';
 import './styles.css'
 import Tesseract from 'tesseract.js';
 
-export default function TakeAPhotoWithTheTextResults() {
+export default function TakeAPhotoWithTheTextResults({textResult1, setTextResult1}) {
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [capturedImage, setCapturedImage] = useState(null); // to take a photo with the student answers
-    const [textResult, setTextResult] = useState("");
+    // const [textResult1, setTextResult1] = useState("text");
+
+    const [selectedImage, setSelectedImage] = useState(null);
+
+    const handleImageUpload = (e) => {
+        const file = e.target.files[0];
+        setSelectedImage(file);
+    }
+
+    const handleUpload = () => {
+        console.log(selectedImage)
+        convertImageToText(selectedImage)
+    }
+
+    const convertImageToText = async (image)=>{
+        try {
+            const { data: { text } } = await Tesseract.recognize(image, 'eng');
+            setTextResult1(text)
+            console.log(textResult1)
+        } catch (error) {
+            console.error('Error in OCR:', error);
+        }
+    }
 
     // open the modal window by clicking on the "open" button
     const OpenModal = () => {
@@ -98,8 +120,8 @@ export default function TakeAPhotoWithTheTextResults() {
     const processImage = async (imageData) => {
         try {
             const { data: { text } } = await Tesseract.recognize(imageData, 'eng');
-            setTextResult(text)
-            console.log(textResult)
+            setTextResult1(text)
+            console.log(textResult1)
         } catch (error) {
             console.error('Error in OCR:', error);
         }
@@ -120,6 +142,8 @@ export default function TakeAPhotoWithTheTextResults() {
                         <button onClick={() => capturePhoto()}>Capture</button>
                         <button onClick={() => switchToMainCamera()}>Switch Camera</button>
                         <button onClick={() => resetPhoto()}>Reset</button>
+                        <input type="file" accept="image/*" onChange={handleImageUpload} />
+                        <button onClick={handleUpload}>Upload</button>
                         <button onClick={() => CloseModal()}>Close</button>
                     </div>
                     <div className='video-div'>
@@ -130,7 +154,7 @@ export default function TakeAPhotoWithTheTextResults() {
                         )}
                         <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
                     </div>
-                    <p>{textResult}</p>
+                    <p>{textResult1}</p>
                 </div>
             )}
         </div>

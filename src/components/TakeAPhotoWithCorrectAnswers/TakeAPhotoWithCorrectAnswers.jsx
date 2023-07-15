@@ -1,14 +1,40 @@
 import React, { useRef, useState } from 'react';
 import './styles.css'
 import Tesseract from 'tesseract.js';
+// import { connect } from 'react-redux';
 
-export default function TakeAPhotoWithCorrectAnswers() {
+export default function TakeAPhotoWithCorrectAnswers({ textResult, setTextResult }) {
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [capturedImage, setCapturedImage] = useState(null); // to take a photo with the correct answers
     // const [capturedImage2, setCapturedImage2] = useState(null);  // to take a photo with student test results
-    const [textResult, setTextResult] = useState("");
+    // const [textResult, setTextResult] = useState("some");
+    const [selectedImage, setSelectedImage] = useState(null);
+    const [facingMode, setFacingMode] = useState('user');
+
+
+
+    const handleImageUpload = (e) => {
+        const file = e.target.files[0];
+        setSelectedImage(file);
+    }
+
+    const handleUpload = () => {
+        console.log(selectedImage)
+        convertImageToText(selectedImage)
+    }
+
+    const convertImageToText = async (image)=>{
+        try {
+            const { data: { text } } = await Tesseract.recognize(image, 'eng');
+            setTextResult(text)
+            console.log(textResult)
+        } catch (error) {
+            console.error('Error in OCR:', error);
+        }
+    }
+
 
     // open the modal window by clicking on the "open" button
     const OpenModal = () => {
@@ -62,19 +88,31 @@ export default function TakeAPhotoWithCorrectAnswers() {
     };
 
     // change camera view from frontal camera to main
-    const switchToMainCamera = async () => {
+    const switchCamera = async () => {
         const stream = videoRef.current.srcObject;
         if (!stream) return;
 
         const tracks = stream.getVideoTracks();
         if (tracks.length > 0) {
-            const mainCameraStream = await navigator.mediaDevices.getUserMedia({
-                video: { facingMode: 'environment' },
-            });
-            // Replace the current camera stream with the main camera stream
-            videoRef.current.srcObject = mainCameraStream;
-            // Stop and release the resources of the previous camera stream
-            tracks[0].stop();
+            if(facingMode === "user"){
+                setFacingMode("environment")
+                const mainCameraStream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: facingMode },
+                });
+                // Replace the current camera stream with the main camera stream
+                videoRef.current.srcObject = mainCameraStream;
+                // Stop and release the resources of the previous camera stream
+                tracks[0].stop();
+            } else {
+                setFacingMode("user")
+                const mainCameraStream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: facingMode },
+                });
+                // Replace the current camera stream with the main camera stream
+                videoRef.current.srcObject = mainCameraStream;
+                // Stop and release the resources of the previous camera stream
+                tracks[0].stop();
+            }
         }
     };
 
@@ -92,7 +130,8 @@ export default function TakeAPhotoWithCorrectAnswers() {
         console.log(typeof (imageSrc))
 
         processImage(imageSrc)
-        setCapturedImage(imageSrc)
+        setCapturedImage(imageSrc)    
+        
     };
 
     // to convert the image to text using tesseract js libriary and save the text in textResult variable
@@ -119,8 +158,10 @@ export default function TakeAPhotoWithCorrectAnswers() {
                 <div className='modal-window' style={{ border: '5px solid orange' }}>
                     <div className='modal-btns'>
                         <button onClick={() => capturePhoto()}>Capture</button>
-                        <button onClick={() => switchToMainCamera()}>Switch Camera</button>
+                        <button onClick={() => switchCamera()}>Switch Camera</button>
                         <button onClick={() => resetPhoto()}>Reset</button>
+                        <input type="file" accept="image/*" onChange={handleImageUpload} />
+                        <button onClick={handleUpload}>Upload</button>
                         <button onClick={() => CloseModal()}>Close</button>
                     </div>
                     <div className='video-div'>
