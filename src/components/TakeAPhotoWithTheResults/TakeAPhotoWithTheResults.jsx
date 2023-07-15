@@ -56,7 +56,7 @@ export default function TakeAPhotoWithTheTextResults({textResult1, setTextResult
     // open the camera a start a videostream
     const openCamera = async () => {
         try {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
             videoRef.current.srcObject = stream;
             videoRef.current.play();
         } catch (error) {
