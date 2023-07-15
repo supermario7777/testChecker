@@ -8,12 +8,8 @@ export default function TakeAPhotoWithCorrectAnswers({ textResult, setTextResult
     const canvasRef = useRef(null);
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [capturedImage, setCapturedImage] = useState(null); // to take a photo with the correct answers
-    // const [capturedImage2, setCapturedImage2] = useState(null);  // to take a photo with student test results
-    // const [textResult, setTextResult] = useState("some");
     const [selectedImage, setSelectedImage] = useState(null);
     const [facingMode, setFacingMode] = useState('user');
-
-
 
     const handleImageUpload = (e) => {
         const file = e.target.files[0];
@@ -21,15 +17,13 @@ export default function TakeAPhotoWithCorrectAnswers({ textResult, setTextResult
     }
 
     const handleUpload = () => {
-        console.log(selectedImage)
         convertImageToText(selectedImage)
     }
 
-    const convertImageToText = async (image)=>{
+    const convertImageToText = async (image) => {
         try {
             const { data: { text } } = await Tesseract.recognize(image, 'eng');
             setTextResult(text)
-            console.log(textResult)
         } catch (error) {
             console.error('Error in OCR:', error);
         }
@@ -94,7 +88,7 @@ export default function TakeAPhotoWithCorrectAnswers({ textResult, setTextResult
 
         const tracks = stream.getVideoTracks();
         if (tracks.length > 0) {
-            if(facingMode === "user"){
+            if (facingMode === "user") {
                 setFacingMode("environment")
                 const mainCameraStream = await navigator.mediaDevices.getUserMedia({
                     video: { facingMode: facingMode },
@@ -127,11 +121,10 @@ export default function TakeAPhotoWithCorrectAnswers({ textResult, setTextResult
         const context = canvasElement.getContext('2d');
         context.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height);
         const imageSrc = canvasElement.toDataURL('image/png');
-        console.log(typeof (imageSrc))
 
         processImage(imageSrc)
-        setCapturedImage(imageSrc)    
-        
+        setCapturedImage(imageSrc)
+
     };
 
     // to convert the image to text using tesseract js libriary and save the text in textResult variable
@@ -139,7 +132,6 @@ export default function TakeAPhotoWithCorrectAnswers({ textResult, setTextResult
         try {
             const { data: { text } } = await Tesseract.recognize(imageData, 'eng');
             setTextResult(text)
-            console.log(textResult)
         } catch (error) {
             console.error('Error in OCR:', error);
         }
@@ -160,9 +152,11 @@ export default function TakeAPhotoWithCorrectAnswers({ textResult, setTextResult
                         <button onClick={() => capturePhoto()}>Capture</button>
                         <button onClick={() => switchCamera()}>Switch Camera</button>
                         <button onClick={() => resetPhoto()}>Reset</button>
-                        <input type="file" accept="image/*" onChange={handleImageUpload} />
-                        <button onClick={handleUpload}>Upload</button>
                         <button onClick={() => CloseModal()}>Close</button>
+                    </div>
+                    <div>
+                        <input type="file" accept="image/*" onChange={handleImageUpload} name='Upload' />
+                        <button onClick={handleUpload}>Convert</button>
                     </div>
                     <div className='video-div'>
                         {capturedImage ? (

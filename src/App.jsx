@@ -10,6 +10,7 @@ function App() {
 
   const [textResult, setTextResult] = useState("");
   const [textResult1, setTextResult1] = useState("");
+  
 
   return (
     <div className="App">

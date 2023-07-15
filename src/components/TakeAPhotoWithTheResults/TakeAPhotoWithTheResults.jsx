@@ -5,11 +5,10 @@ import Tesseract from 'tesseract.js';
 export default function TakeAPhotoWithTheTextResults({textResult1, setTextResult1}) {
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
-    const [isModalOpen, setIsModalOpen] = useState(false)
-    const [capturedImage, setCapturedImage] = useState(null); // to take a photo with the student answers
-    // const [textResult1, setTextResult1] = useState("text");
-
+    const [isModalOpen2, setIsModalOpen2] = useState(false)
+    const [capturedImage, setCapturedImage] = useState(null); // to take a photo with the correct answers
     const [selectedImage, setSelectedImage] = useState(null);
+    const [facingMode, setFacingMode] = useState('user');
 
     const handleImageUpload = (e) => {
         const file = e.target.files[0];
@@ -17,7 +16,6 @@ export default function TakeAPhotoWithTheTextResults({textResult1, setTextResult
     }
 
     const handleUpload = () => {
-        console.log(selectedImage)
         convertImageToText(selectedImage)
     }
 
@@ -25,7 +23,6 @@ export default function TakeAPhotoWithTheTextResults({textResult1, setTextResult
         try {
             const { data: { text } } = await Tesseract.recognize(image, 'eng');
             setTextResult1(text)
-            console.log(textResult1)
         } catch (error) {
             console.error('Error in OCR:', error);
         }
@@ -33,7 +30,7 @@ export default function TakeAPhotoWithTheTextResults({textResult1, setTextResult
 
     // open the modal window by clicking on the "open" button
     const OpenModal = () => {
-        setIsModalOpen(true);
+        setIsModalOpen2(true);
         openCamera();
     }
 
@@ -48,7 +45,7 @@ export default function TakeAPhotoWithTheTextResults({textResult1, setTextResult
     // close the modal window and run closeCamera() func
     const CloseModal = () => {
         setCapturedImage(null)
-        setIsModalOpen(false)
+        setIsModalOpen2(false)
         closeCamera()
         const videoElement = videoRef.current;
         if (videoElement && videoElement.srcObject) {
@@ -89,13 +86,25 @@ export default function TakeAPhotoWithTheTextResults({textResult1, setTextResult
 
         const tracks = stream.getVideoTracks();
         if (tracks.length > 0) {
-            const mainCameraStream = await navigator.mediaDevices.getUserMedia({
-                video: { facingMode: 'environment' },
-            });
-            // Replace the current camera stream with the main camera stream
-            videoRef.current.srcObject = mainCameraStream;
-            // Stop and release the resources of the previous camera stream
-            tracks[0].stop();
+            if(facingMode === "user"){
+                setFacingMode("environment")
+                const mainCameraStream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: facingMode },
+                });
+                // Replace the current camera stream with the main camera stream
+                videoRef.current.srcObject = mainCameraStream;
+                // Stop and release the resources of the previous camera stream
+                tracks[0].stop();
+            } else {
+                setFacingMode("user")
+                const mainCameraStream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: facingMode },
+                });
+                // Replace the current camera stream with the main camera stream
+                videoRef.current.srcObject = mainCameraStream;
+                // Stop and release the resources of the previous camera stream
+                tracks[0].stop();
+            }
         }
     };
 
@@ -110,7 +119,6 @@ export default function TakeAPhotoWithTheTextResults({textResult1, setTextResult
         const context = canvasElement.getContext('2d');
         context.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height);
         const imageSrc = canvasElement.toDataURL('image/png');
-        console.log(typeof (imageSrc))
 
         processImage(imageSrc)
         setCapturedImage(imageSrc)
@@ -121,7 +129,6 @@ export default function TakeAPhotoWithTheTextResults({textResult1, setTextResult
         try {
             const { data: { text } } = await Tesseract.recognize(imageData, 'eng');
             setTextResult1(text)
-            console.log(textResult1)
         } catch (error) {
             console.error('Error in OCR:', error);
         }
@@ -135,16 +142,18 @@ export default function TakeAPhotoWithTheTextResults({textResult1, setTextResult
 
     return (
         <div>
-            {!isModalOpen && <button onClick={OpenModal}>Take a photo with the student results</button>}
-            {isModalOpen && (
+            {!isModalOpen2 && <button onClick={OpenModal}>Take a photo with the student results</button>}
+            {isModalOpen2 && (
                 <div className='modal-window' style={{ border: '5px solid orange' }}>
                     <div className='modal-btns'>
                         <button onClick={() => capturePhoto()}>Capture</button>
                         <button onClick={() => switchToMainCamera()}>Switch Camera</button>
                         <button onClick={() => resetPhoto()}>Reset</button>
-                        <input type="file" accept="image/*" onChange={handleImageUpload} />
-                        <button onClick={handleUpload}>Upload</button>
                         <button onClick={() => CloseModal()}>Close</button>
+                    </div>
+                    <div>
+                        <input type="file" accept="image/*" onChange={handleImageUpload} name='Upload' />
+                        <button onClick={handleUpload}>Convert</button>
                     </div>
                     <div className='video-div'>
                         {capturedImage ? (
