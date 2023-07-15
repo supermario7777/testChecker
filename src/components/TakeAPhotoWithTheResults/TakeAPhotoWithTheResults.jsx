@@ -8,7 +8,7 @@ export default function TakeAPhotoWithTheTextResults({textResult1, setTextResult
     const [isModalOpen2, setIsModalOpen2] = useState(false)
     const [capturedImage, setCapturedImage] = useState(null); // to take a photo with the correct answers
     const [selectedImage, setSelectedImage] = useState(null);
-    const [facingMode, setFacingMode] = useState('user');
+    const [facingMode, setFacingMode] = useState('environment');
 
     const handleImageUpload = (e) => {
         const file = e.target.files[0];
@@ -37,8 +37,8 @@ export default function TakeAPhotoWithTheTextResults({textResult1, setTextResult
     // to set required width and height depending on device camera parameters
     const setMaxWidthAndHeight = () => {
         if (videoRef.current) {
-            videoRef.current.style.maxWidth = '100%';
-            videoRef.current.style.maxHeight = '100%';
+            videoRef.current.style.maxWidth = '60%';
+            videoRef.current.style.maxHeight = '60%';
         }
     };
 
