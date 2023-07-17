@@ -22,7 +22,7 @@ const ToShowTheTestResutls = ({ textResult, textResult1, isModalOpen3, setIsModa
     <div>
       {!isModalOpen3 && <button className='main-button' onClick={openModal}>Show the results</button>}
       {isModalOpen3 && (
-        <div className='modal-window'>          
+        <div className='modal-window' style={{padding: '10px 30px'}}>          
             <button className='all-buttons' onClick={() => closeModal()}>Close</button>
             <p className='result'>{result}</p>
         </div>
