@@ -4,6 +4,8 @@
     gap: 25px;
     align-items: center;
     justify-content: center;
-    width: auto;
+    width: 750px;
     height: 100vh;
+    background-color: #508991;
+    border-radius: 10px;
 }

@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import './styles.css'
+import '../TakeAPhotoWithCorrectAnswers/styles.css'
 import Tesseract from 'tesseract.js';
 
 export default function TakeAPhotoWithTheTextResults({textResult1, setTextResult1}) {
@@ -146,18 +146,18 @@ export default function TakeAPhotoWithTheTextResults({textResult1, setTextResult
 
     return (
         <div>
-            {!isModalOpen2 && <button onClick={OpenModal}>Take a photo with the student results</button>}
+            {!isModalOpen2 && <button className='main-button' onClick={OpenModal}>Take a photo with the student results</button>}
             {isModalOpen2 && (
-                <div className='modal-window' style={{ border: '5px solid orange' }}>
+                <div className='modal-window'>
                     <div className='modal-btns'>
-                        <button onClick={() => capturePhoto()}>Capture</button>
-                        <button onClick={() => switchToMainCamera()}>Switch Camera</button>
-                        <button onClick={() => resetPhoto()}>Reset</button>
-                        <button onClick={() => CloseModal()}>Close</button>
+                        <button className='all-buttons' onClick={() => capturePhoto()}>Capture</button>
+                        <button className='all-buttons' onClick={() => switchToMainCamera()}>Switch Camera</button>
+                        <button className='all-buttons' onClick={() => resetPhoto()}>Reset</button>
+                        <button className='all-buttons' onClick={() => CloseModal()}>Close</button>
                     </div>
                     <div>
-                        <input type="file" accept="image/*" onChange={handleImageUpload} name='Upload' />
-                        <button onClick={handleUpload}>Convert</button>
+                        <input className='custom-file-input' type="file" accept="image/*" onChange={handleImageUpload}/>
+                        <button className='all-buttons' onClick={handleUpload}>Convert</button>
                     </div>
                     <div className='video-div'>
                         {capturedImage ? (
