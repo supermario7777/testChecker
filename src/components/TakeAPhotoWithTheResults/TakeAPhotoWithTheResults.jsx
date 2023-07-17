@@ -155,7 +155,7 @@ export default function TakeAPhotoWithTheTextResults({textResult1, setTextResult
                         <button className='all-buttons' onClick={() => resetPhoto()}>Reset</button>
                         <button className='all-buttons' onClick={() => CloseModal()}>Close</button>
                     </div>
-                    <div>
+                    <div className='buttons-below'>
                         <input className='custom-file-input' type="file" accept="image/*" onChange={handleImageUpload}/>
                         <button className='all-buttons' onClick={handleUpload}>Convert</button>
                     </div>

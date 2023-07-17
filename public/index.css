@@ -1,12 +1,19 @@
-body{
+/* body{
     margin: 0px auto;
     background-color: #F1F1F1;
     max-width: 1440px;
-    display: flex;
+    /* display: flex;
     justify-content: center;
     align-items: center;
-}
+} */
 
+
+body {
+    background-color: black;
+    display: flex;
+    justify-content: center;
+    font-family: 'Catamaran', sans-serif;;
+}
 
 *, *::after, *::before{    
     box-sizing: border-box;

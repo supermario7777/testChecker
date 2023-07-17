@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { performComparison } from './PerformComparison'
-import './index.css' 
+import '../TakeAPhotoWithCorrectAnswers/styles.css' 
 
 const ToShowTheTestResutls = ({ textResult, textResult1}) => {
 
@@ -21,9 +21,9 @@ const ToShowTheTestResutls = ({ textResult, textResult1}) => {
     <div>
       {!isModalOpen3 && <button className='main-button' onClick={openModal}>Show the results</button>}
       {isModalOpen3 && (
-        <div className='modal-window' style={{ border: '5px solid orange' }}>          
+        <div className='modal-window'>          
             <button className='all-buttons' onClick={() => closeModal()}>Close</button>
-            <p>{result}</p>
+            <p className='result'>{result}</p>
         </div>
       )}
     </div>
