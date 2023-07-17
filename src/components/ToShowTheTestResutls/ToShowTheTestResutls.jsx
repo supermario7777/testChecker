@@ -1,10 +1,11 @@
-import React, { useState } from 'react'
+// import React, { useState } from 'react'
+import React from 'react'
 import { performComparison } from './PerformComparison'
 import '../TakeAPhotoWithCorrectAnswers/styles.css' 
 
-const ToShowTheTestResutls = ({ textResult, textResult1}) => {
+const ToShowTheTestResutls = ({ textResult, textResult1, isModalOpen3, setIsModalOpen3}) => {
 
-  const [isModalOpen3, setIsModalOpen3] = useState(false)
+  // const [isModalOpen3, setIsModalOpen3] = useState(false)
   const openModal = () => {
     setIsModalOpen3(true)
   }

@@ -2,10 +2,10 @@ import React, { useRef, useState } from 'react';
 import './styles.css'
 import Tesseract from 'tesseract.js';
 
-export default function TakeAPhotoWithCorrectAnswers({ textResult, setTextResult }) {
+export default function TakeAPhotoWithCorrectAnswers({ textResult, setTextResult, isModalOpen, setIsModalOpen }) {
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
-    const [isModalOpen, setIsModalOpen] = useState(false)
+    // const [isModalOpen, setIsModalOpen] = useState(false)
     const [capturedImage, setCapturedImage] = useState(null); // to take a photo with the correct answers
     const [selectedImage, setSelectedImage] = useState(null);
     const [facingMode, setFacingMode] = useState('user');

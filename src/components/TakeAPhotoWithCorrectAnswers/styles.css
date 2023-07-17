@@ -29,9 +29,9 @@ img {
 .main-button {
     text-decoration: none;
     display: inline-block;
-    width: 400px;
+    /* width: 400px; */
     height: 45px;
-    line-height: 45px;
+    /* line-height: 45px; */
     border-radius: 45px;
     margin: 10px 20px;
     font-family: 'Montserrat', sans-serif;
@@ -45,6 +45,7 @@ img {
     box-shadow: 0 8px 15px rgba(0, 0, 0, .1);
     transition: .3s;
     border: none;
+    padding: 0px 13px;
 }
 
 .main-button:hover {
@@ -86,8 +87,9 @@ img {
 
 .custom-file-input {
     color: transparent;
-    width: 130px;
-    height: 36px;
+    width: 121px;
+    height: 41px;
+    border-radius: 45px;
 }
 
 .custom-file-input::-webkit-file-upload-button {
