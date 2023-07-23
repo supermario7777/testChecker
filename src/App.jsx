@@ -15,13 +15,12 @@ function App() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isModalOpen2, setIsModalOpen2] = useState(false)
   const [isModalOpen3, setIsModalOpen3] = useState(false)
-
   
 
   return (
     <div className="App">
       <div>
-        <TakeAPhotoWithCorrectAnswers  textResult={textResult} setTextResult={setTextResult} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}/>
+        <TakeAPhotoWithCorrectAnswers textResult={textResult} setTextResult={setTextResult} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}/>    
       </div>
       <div>
         <TakeAPhotoWithTheAnswers textResult1={textResult1} setTextResult1={setTextResult1} isModalOpen2={isModalOpen2} setIsModalOpen2={setIsModalOpen2} />

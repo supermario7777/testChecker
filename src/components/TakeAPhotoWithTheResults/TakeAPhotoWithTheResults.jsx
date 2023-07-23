@@ -146,7 +146,7 @@ export default function TakeAPhotoWithTheTextResults({textResult1, setTextResult
 
     return (
         <div>
-            {!isModalOpen2 && <button className='main-button' onClick={OpenModal}>Take a photo with the student results</button>}
+            {!isModalOpen2 && <button className='main-button' onClick={OpenModal}>Take a photo with the student's results</button>}
             {isModalOpen2 && (
                 <div className='modal-window'>
                     <div className='modal-btns'>
